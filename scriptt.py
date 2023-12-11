@@ -1,6 +1,6 @@
-import math
 import random
-infoBuy = False
+
+
 
 shopOffersList = [
     [ 0, "Emerald armor", 45, 50],
@@ -18,32 +18,36 @@ def checkPrice(cena, yourbalnce):
         return True
     
 class Player():
-    def __init__(self, name, hp, attack, durability, money=100):
+    def __init__(self, name, hp, attack, stamina, money=100, infoBuy=False):
         self.name = name
         self.hp = hp
         self.attack = attack
-        self.durability = durability
+        self.stamina = stamina
         self.money = money
+        self.infoBuy = infoBuy
         
-    def MiningCamp(self, money):
-        print("You are in mining Camp")
-        while True:
-            print("Press 1 to dig to some place")
-            print("if you ant to escape enter 2")
-            i = input()
-            i = int(i)
-            if i == 1:
-                ranCislo = random.randint(1,5)
-                if ranCislo == 4:
-                    print("You mined the right way :)")
-                    self.money += 20
-                else :
-                    print("You mined the wrong way :(")   
-            if i == 2:
-                break
+    def MiningCamp(self):
+        if self.infoBuy == True:
+            print("You are in mining Camp")
+            while True:
+                print("Press 1 to dig to some place")
+                print("if you ant to escape enter 2")
+                i = input()
+                i = int(i)
+                if i == 1:
+                    ranCislo = random.randint(1,5)
+                    if ranCislo == 4:
+                        print("You mined the right way :)")
+                        self.money += 20
+                    else :
+                        print("You mined the wrong way :(")   
+                if i == 2:
+                    break
+        else:
+            print("Your not allowed")
             
     def Vypiss(self):
-        print(f"Name = {self.name}, HP: {self.hp}, Attack: {self.attack}, Durab: {self.durability}")
+        print(f"Name = {self.name}, HP: {self.hp}, Attack: {self.attack}, Durab: {self.stamina}")
         
     def Balacik(self):
         print(f"currently you have { self.money} coins")
@@ -63,7 +67,7 @@ class Player():
             if x[0] == 1:
                 print("attack")
             if x[0] == 2: 
-                print("durability")
+                print("stamina")
             if x[0] == 3:
                 print("knowlidge")
         print("Do you want something? ")
@@ -71,31 +75,32 @@ class Player():
         inputicek = int(inputicek)
         
         if inputicek == 1:
-            if checkPrice(x[3], player1.money):
-                player1.money -= x[3]
-                player1.hp += x[2]
-                
+            if checkPrice(shopOffersList[0][3], player1.money):
+                player1.money -= shopOffersList[0][3]
+                player1.hp += shopOffersList[0][2]
+
             print(f"Your balance is {self.money} coins")
             
         if inputicek == 2:
-            if checkPrice(x[3], player1.money):
-                player1.money -= x[3]
-                player1.attack += x[2]
+            if checkPrice(shopOffersList[1][3], player1.money):
+                player1.money -= shopOffersList[1][3]
+                player1.attack += shopOffersList[1][2]
                 
             print(f"Your balance is {self.money} coins")
 
         if inputicek == 3:
-            if checkPrice(x[3], player1.money):
-                player1.money -= x[3]
-                player1.durability += x[2]
+            if checkPrice(shopOffersList[2][3], player1.money):
+                player1.money -= shopOffersList[2][3]
+                player1.attack += shopOffersList[2][2]
                 
             print(f"Your balance is {self.money} coins")
             
         if inputicek == 4:
-            if checkPrice(x[3], player1.money):
-                player1.money -= x[3]
-                infoBuy = True
-                print("Now you have special ability to acces special information....")
+            if checkPrice(shopOffersList[3][3], player1.money):
+                player1.money -= shopOffersList[3][3]
+                self.infoBuy = True
+                print("Now you have special ability to acces special information.... ")
+                
             else:
                 print(x[3], player1.money)
             print(f"Your balance is {self.money} coins")
@@ -103,14 +108,14 @@ class Player():
             
                     
 class Enemy():
-    def __init__(self, name, hp, attack, durability):
+    def __init__(self, name, hp, attack, stamina):
         self.name = name
         self.hp = hp
         self.attack = attack
-        self.durability = durability
+        self.stamina = stamina
 
     def Vypiss(self):
-        print(f"Name = {self.name}, HP: {self.hp}, Attack: {self.attack}, Durab: {self.durability}")
+        print(f"Name = {self.name}, HP: {self.hp}, Attack: {self.attack}, Durab: {self.stamina}")
 
     
     
@@ -122,7 +127,7 @@ enemy3 = Enemy("Vepinbell", 1000, 30, 7)
 
 inpuJmeno = input("What is your name? ")
 
-player1 = Player(inpuJmeno, 100, 20, 5)
+player1 = Player(inpuJmeno, 100, 20, 5, 100, False)
 
 while True:
 
@@ -130,10 +135,12 @@ while True:
     print("To print your stats eneter 2")
     print("To get your balance 3")
     print("To get out enter 4")
+    if player1.infoBuy:
+        print("Special information: You now know there to find mining camp where you can mine some coin. To do soo you can press *")
+
+
     whereToGO = input("")
 
-    if infoBuy:
-        print("Special information: You now know there to find mining camp where you can mine some coin. To do soo you can press *")
 
 
     if whereToGO == "1":
@@ -146,7 +153,7 @@ while True:
     if whereToGO == "4":
         break
         
-    if whereToGO == "*" and infoBuy:
+    if whereToGO == "*" and player1.infoBuy:
         player1.MiningCamp()
         
         
@@ -162,4 +169,22 @@ if c == "0":
 if c == "1":
     print("You chose to fight... Very well... ")
     print("Do you even have a chance we will see")
+    print(f"Your first enemy is {enemy1.name}")
+    enemy1.Vypiss()
+    
+    print("You attack first - press 1")
+    
+    
+    
+    if player1.stamina > 0:
+        
+        inputikAtt = input()
+        if inputikAtt == 1:
+            enemy1.hp -= player1.attack
+        player1.stamina -= 1
+    
+    
+    
+    
+    
     
