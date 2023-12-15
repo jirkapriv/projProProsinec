@@ -2,11 +2,14 @@ import random
 import sys
 
 shopOffersList = [
-    [ 0, "Emerald armor", 45, 50],
-    [ 1, "Sword of Doom", 60, 50],
+    [ 0, "Emerald armor", 1, 50],
+    [ 1, "Sword of Doom", 1, 50],
     [ 2, "Redbull", 5, 10],
     [ 3, "Dulezite Informace", "mnoho", 100]
     ]
+
+hapecka = ["❤️","❤️","❤️","❤️","❤️","❤️","❤️","❤️","❤️","❤️"]
+armor   = ["🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️"]
 
 def checkPrice(cena, yourbalnce):
     if cena > yourbalnce:
@@ -15,7 +18,7 @@ def checkPrice(cena, yourbalnce):
     if yourbalnce >= cena:
         print("Succesfull buy :) ")
         return True
-    
+ 
 class Game():
     def __init__(self):
         pass
@@ -58,8 +61,10 @@ class Game():
         print(f"Your balance is {player1.money} coins")
         
         print("Our offers are: ")
-        for x in shopOffersList:
-            print(f"{x[0] + 1}) {x[1]}: Price is {x[3]}")       
+        for x, g in enumerate (shopOffersList):
+            if player1.infoBuy == True and g == len(shopOffersList) -1:
+                break
+            print(f"{x[0] + 1}) {x[1]}: Price is {x[3]}")
             print(f"\t It adds {x[2]} to your ", end="" )
             if x[0] == 0:
                 print("armor")
@@ -67,6 +72,8 @@ class Game():
                 print("attack")
             if x[0] == 2: 
                 print("stamina")
+            if player1.infoBuy == True:
+                continue
             if x[0] == 3:
                 print("knowlidge and unlock mining camp")
         print("Do you want something? ")
@@ -78,25 +85,29 @@ class Game():
         if inputicek == 1:
             if checkPrice(shopOffersList[0][3], player1.money):
                 player1.money -= shopOffersList[0][3]
-                player1.hp += shopOffersList[0][2]
+                shopOffersList[0][3] += 15
+                player1.hp += 1
+                hapecka.append("❤️")
 
             print(f"Your balance is {player1.money} coins")
             
         if inputicek == 2:
             if checkPrice(shopOffersList[1][3], player1.money):
                 player1.money -= shopOffersList[1][3]
+                shopOffersList[1][3] += 15
                 player1.attack += shopOffersList[1][2]
-                
+
             print(f"Your balance is {player1.money} coins")
 
         if inputicek == 3:
             if checkPrice(shopOffersList[2][3], player1.money):
                 player1.money -= shopOffersList[2][3]
+                shopOffersList[2][3] += 15
                 player1.stamina += shopOffersList[2][2]
                 
             print(f"Your balance is {player1.money} coins")
             
-        if inputicek == 4:
+        if inputicek == 4 and self.infoBuy == False:
             if checkPrice(shopOffersList[3][3], player1.money):
                 player1.money -= shopOffersList[3][3]
                 self.infoBuy = True
@@ -161,13 +172,15 @@ class Player():
         self.stamina = stamina
         self.money = money
         self.infoBuy = infoBuy
-             
+
     def Vypiss(self):
-        print(f"Name = {self.name}, HP: {self.hp}, Attack: {self.attack}, Durab: {self.stamina}")
-        
+        print(f"Name - {self.name},\nAttack: {self.attack},\nStamina: {self.stamina},")
+        print("HP:", end="")
+        for x in hapecka:
+            print(x, end=" ")
     def Balancik(self):
         print(f"currently you have { self.money} coins")
-                  
+     
 class Enemy():
     def __init__(self, name, hp, attack, stamina):
         self.name = name
@@ -178,9 +191,6 @@ class Enemy():
     def Vypiss(self):
         print(f"Name = {self.name}, HP: {self.hp}, Attack: {self.attack}, Durab: {self.stamina}")
 
-
-"""                                         GAME INIT                                         """
-    
 print("""\
 
  __      __       .__  .__                                  __             __  .__                                           
@@ -193,14 +203,17 @@ print("""\
                     """)
 
 inpuJmeno = input("What is your name? ")
-    
+print(f"Hi {inpuJmeno}")
+
+"""                                         GAME INIT                                         """
+
 enemy1 = Enemy("Charizard", 100, 20, 5)
 enemy2 = Enemy("Blastoise", 250, 25, 6)
 enemy3 = Enemy("Vepinbell", 1000, 30, 7)
-player1 = Player(inpuJmeno, 100, 20, 5, 100, False)
+player1 = Player(inpuJmeno, len(hapecka) + 1, 1, 5, 100, False)
 game = Game()
 run = True
- 
+
 """                                         GAME INIT                                         """
 
 while run:
