@@ -21,16 +21,16 @@ def checkPrice(cena, yourbalnce):
  
 class Game():
     def __init__(self):
-        pass
+        self.infoBuy = False
     
     def rozcesti(self):
         print()
         print()
         print("You can go to shop if you want :) If so enter number 1")
-        print("To print your stats eneter 2")
+        print("To print your stats enter 2")
         print("To get your balance 3")
         print("To get out enter 4")
-        if player1.infoBuy:
+        if self.infoBuy:
             print("Special information: You now know there to find mining camp where you can mine some coin. To do soo you can press *")
             
         whereToGO = input("")
@@ -50,34 +50,41 @@ class Game():
         if whereToGO == "4":
             return False
             
-        if whereToGO == "*" and player1.infoBuy:
+        if whereToGO == "*" and self.infoBuy:
             game.MiningCamp()
             return True
     
     def Shop(self):
         print("--------Shop--------")
-        print("Welcome to Shop what do you wish for?")
+        print("Welcome to Shop, what do you wish for?")
         
         print(f"Your balance is {player1.money} coins")
-        
         print("Our offers are: ")
-        for x, g in enumerate (shopOffersList):
-            if player1.infoBuy == True and g == len(shopOffersList) -1:
+        
+        for index, offer in enumerate(shopOffersList):
+            if self.infoBuy and index == len(shopOffersList) - 1:
+                self.infoBuy = True
                 break
-            print(f"{x[0] + 1}) {x[1]}: Price is {x[3]}")
-            print(f"\t It adds {x[2]} to your ", end="" )
-            if x[0] == 0:
+            
+            print(f"{index + 1}) {offer[1]}: Price is {offer[3]}")
+            print(f"\t It adds {offer[2]} to your ", end="")
+            
+            if offer[0] == 0:
                 print("armor")
-            if x[0] == 1:
+            elif offer[0] == 1:
                 print("attack")
-            if x[0] == 2: 
+            elif offer[0] == 2:
                 print("stamina")
-            if player1.infoBuy == True:
+
+            if self.infoBuy:
                 continue
-            if x[0] == 3:
+        
+            if offer[0] == 3:
                 print("knowlidge and unlock mining camp")
         print("Do you want something? ")
         inputicek = input()
+        if inputicek == "no":
+            return
         try:
             inputicek = int(inputicek)
         except:
@@ -114,8 +121,11 @@ class Game():
                 print("Now you have special ability to acces special information.... ")
                 
             else:
-                print(x[3], player1.money)
+                print(offer[3], player1.money)
             print(f"Your balance is {player1.money} coins")
+            
+        if inputicek == "ex":
+            return
     
     def MiningCamp(self):
         if self.infoBuy == True:
@@ -155,14 +165,32 @@ class Game():
             print(f"Your first enemy is {enemy1.name}")
             enemy1.Vypiss()
             
-            print("You attack first - press 1")
             
-            if player1.stamina > 0:
-                
+            while player1.stamina > 0:
+                print("Attack - press 1")
                 inputikAtt = input()
-                if inputikAtt == 1:
+                if inputikAtt == "1":
                     enemy1.hp -= player1.attack
+                    player1.hp -= enemy1.attack
+                    for x in range(enemy1.attack):
+                        hapecka.pop()
+                    if enemy1.hp < 0:
+                        enemy1.hp = 0
+                    print(f"Enemy HP: {enemy1.hp}")
+                    print("Your HP: ", end="")
+                    for x in hapecka:
+                        print(x, end="  ")
                 player1.stamina -= 1
+                print()
+                print(f"Your stamina: {player1.stamina}")
+                if enemy1.hp <= 0:
+                    print("You won!!!")
+                    player1.money += 50
+                    print("You gained 50 coins")
+                    return
+            if enemy1.hp > 0:
+                print("You lost")
+                sys.exit()
 
 class Player():
     def __init__(self, name, hp, attack, stamina, money=100, infoBuy=False):
@@ -174,10 +202,12 @@ class Player():
         self.infoBuy = infoBuy
 
     def Vypiss(self):
+        
         print(f"Name - {self.name},\nAttack: {self.attack},\nStamina: {self.stamina},")
         print("HP:", end="")
         for x in hapecka:
             print(x, end=" ")
+   
     def Balancik(self):
         print(f"currently you have { self.money} coins")
      
@@ -207,10 +237,10 @@ print(f"Hi {inpuJmeno}")
 
 """                                         GAME INIT                                         """
 
-enemy1 = Enemy("Charizard", 100, 20, 5)
-enemy2 = Enemy("Blastoise", 250, 25, 6)
-enemy3 = Enemy("Vepinbell", 1000, 30, 7)
-player1 = Player(inpuJmeno, len(hapecka) + 1, 1, 5, 100, False)
+enemy1 = Enemy("Charizard", 5, 1, 5)
+enemy2 = Enemy("Blastoise", 10, 2, 6)
+enemy3 = Enemy("Vepinbell", 50, 3, 7)
+player1 = Player(inpuJmeno, len(hapecka) + 1, 2, 5, 100, False)
 game = Game()
 run = True
 
@@ -218,5 +248,7 @@ run = True
 
 while run:
     while game.rozcesti() == True:
+        if game.rozcesti() == False:
+            break
         game.rozcesti()
     game.firstBoss()
