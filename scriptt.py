@@ -18,7 +18,7 @@ def checkPrice(cena, yourbalnce):
     if yourbalnce >= cena:
         print("Succesfull buy :) ")
         return True
- 
+
 class Game():
     def __init__(self):
         self.infoBuy = False
@@ -149,57 +149,16 @@ class Game():
                     break
         else:
             print("Your not allowed")
-       
-    def firstBoss(self):
-        
-        print("First boss aproched you if you want to run press 0 if you want to fight press 1")
-        c = input()
-
-        if c == "0":
-            print("While you were running you tripped and broke your neck.... :( ")
-            print("Game Over")
-            sys.exit()
-        if c == "1":
-            print("You chose to fight... Very well... ")
-            print("Do you even have a chance we will see")
-            print(f"Your first enemy is {enemy1.name}")
-            enemy1.Vypiss()
-            
-            
-            while player1.stamina > 0:
-                print("Attack - press 1")
-                inputikAtt = input()
-                if inputikAtt == "1":
-                    enemy1.hp -= player1.attack
-                    player1.hp -= enemy1.attack
-                    for x in range(enemy1.attack):
-                        hapecka.pop()
-                    if enemy1.hp < 0:
-                        enemy1.hp = 0
-                    print(f"Enemy HP: {enemy1.hp}")
-                    print("Your HP: ", end="")
-                    for x in hapecka:
-                        print(x, end="  ")
-                player1.stamina -= 1
-                print()
-                print(f"Your stamina: {player1.stamina}")
-                if enemy1.hp <= 0:
-                    print("You won!!!")
-                    player1.money += 50
-                    print("You gained 50 coins")
-                    return
-            if enemy1.hp > 0:
-                print("You lost")
-                sys.exit()
 
 class Player():
-    def __init__(self, name, hp, attack, stamina, money=100, infoBuy=False):
+    def __init__(self, name, hp, attack, stamina, money=100, infoBuy=False, fightsWon=0):
         self.name = name
         self.hp = hp
         self.attack = attack
         self.stamina = stamina
         self.money = money
         self.infoBuy = infoBuy
+        self.fightsWon = fightsWon
 
     def Vypiss(self):
         
@@ -210,7 +169,7 @@ class Player():
    
     def Balancik(self):
         print(f"currently you have { self.money} coins")
-     
+
 class Enemy():
     def __init__(self, name, hp, attack, stamina):
         self.name = name
@@ -221,8 +180,49 @@ class Enemy():
     def Vypiss(self):
         print(f"Name = {self.name}, HP: {self.hp}, Attack: {self.attack}, Durab: {self.stamina}")
 
-print("""\
+    def fight(self):
+        
+        print("Boss aproched you if you want to run press 0 if you want to fight press 1")
+        c = input()
 
+        if c == "0":
+            print("While you were running you tripped and broke your neck.... :( ")
+            print("Game Over")
+            sys.exit()
+        if c == "1":
+            print("You chose to fight... Very well... ")
+            print("Do you even have a chance we will see")
+            print(f"Your enemy is {self.name}")
+            self.Vypiss()
+            
+            while player1.stamina > 0:
+                print("Attack - press 1")
+                inputikAtt = input()
+                if inputikAtt == "1":
+                    self.hp -= player1.attack
+                    player1.hp -= self.attack
+                    for x in range(self.attack):
+                        hapecka.pop()
+                    if self.hp < 0:
+                        self.hp = 0
+                    print(f"Enemy HP: {self.hp}")
+                    print("Your HP: ", end="")
+                    for x in hapecka:
+                        print(x, end="  ")
+                player1.stamina -= 1
+                print()
+                print(f"Your stamina: {player1.stamina}")
+                if enemy1.hp <= 0:
+                    print("You won!!!")
+                    player1.money += 50
+                    player1.fightsWon += 1
+                    print("You gained 50 coins")
+                    return
+            if self.hp >= 0:
+                print("You lost")
+                sys.exit()
+
+print("""\
  __      __       .__  .__                                  __             __  .__                                           
 /  \    /  \ ____ |  | |  |   ____  ____   _____   ____   _/  |_  ____   _/  |_|  |__   ____      _________    _____   ____  
 \   \/\/   // __ \|  | |  | _/ ___\/  _ \ /     \_/ __ \  \   __\/  _ \  \   __\  |  \_/ __ \    / ___\__  \  /     \_/ __ \ 
@@ -240,7 +240,7 @@ print(f"Hi {inpuJmeno}")
 enemy1 = Enemy("Charizard", 5, 1, 5)
 enemy2 = Enemy("Blastoise", 10, 2, 6)
 enemy3 = Enemy("Vepinbell", 50, 3, 7)
-player1 = Player(inpuJmeno, len(hapecka) + 1, 2, 5, 100, False)
+player1 = Player(inpuJmeno, len(hapecka) + 1, 2, 5, 100, False, 0)
 game = Game()
 run = True
 
@@ -251,4 +251,12 @@ while run:
         if game.rozcesti() == False:
             break
         game.rozcesti()
-    game.firstBoss()
+    if player1.fightsWon == 0:
+        enemy1.fight()
+    game.rozcesti()
+    if player1.fightsWon == 1:
+        enemy2.fight()
+    game.rozcesti()
+    if player1.fightsWon == 2:
+        enemy3.fight()
+    print(f"You won the game {player1.name}. Congrats!!!!!!")
