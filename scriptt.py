@@ -195,30 +195,36 @@ class Enemy():
             print(f"Your enemy is {self.name}")
             self.Vypiss()
             
-            while player1.stamina > 0:
-                print("Attack - press 1")
-                inputikAtt = input()
-                if inputikAtt == "1":
-                    self.hp -= player1.attack
-                    player1.hp -= self.attack
-                    for x in range(self.attack):
-                        hapecka.pop()
-                    if self.hp < 0:
-                        self.hp = 0
-                    print(f"Enemy HP: {self.hp}")
-                    print("Your HP: ", end="")
-                    for x in hapecka:
-                        print(x, end="  ")
-                player1.stamina -= 1
-                print()
-                print(f"Your stamina: {player1.stamina}")
-                if enemy1.hp <= 0:
-                    print("You won!!!")
-                    player1.money += 50
-                    player1.fightsWon += 1
-                    print("You gained 50 coins")
-                    return
-            if self.hp >= 0:
+            while player1.stamina > 0 and hapecka != []:
+                if player1.hp > 0:
+                    print("Attack - press 1")
+                    inputikAtt = input()
+                    if inputikAtt == "1":
+                        self.hp -= player1.attack
+                        player1.hp -= self.attack
+                        try:
+                            for x in range(self.attack):
+                                hapecka.pop()
+                        except:
+                            print("You lost :(")
+                            sys.exit()
+                            
+                        if self.hp < 0:
+                            self.hp = 0
+                        print(f"Enemy HP: {self.hp}")
+                        print("Your HP: ", end="")
+                        for x in hapecka:
+                            print(x, end="  ")
+                    player1.stamina -= 1
+                    print()
+                    print(f"Your stamina: {player1.stamina}")
+                    if self.hp <= 0:
+                        print("You won!!!")
+                        player1.money += 50
+                        player1.fightsWon += 1
+                        print("You gained 50 coins")
+                        return
+            if self.hp or hapecka == [] > 0:
                 print("You lost")
                 sys.exit()
 
