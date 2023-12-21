@@ -1,6 +1,18 @@
 import random
 import sys
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    # Copied from stack ovfw
+
 shopOffersList = [
     [ 0, "Emerald armor", 1, 50],
     [ 1, "Sword of Doom", 1, 50],
@@ -9,14 +21,13 @@ shopOffersList = [
     ]
 
 hapecka = ["❤️","❤️","❤️","❤️","❤️","❤️","❤️","❤️","❤️","❤️"]
-armor   = ["🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️","🛡️"]
 
 def checkPrice(cena, yourbalnce):
     if cena > yourbalnce:
-        print("You are too poor :(")
+        print(bcolors.FAIL + "You are too poor :(" + bcolors.ENDC)
         return False
     if yourbalnce >= cena:
-        print("Succesfull buy :) ")
+        print(bcolors.OKGREEN + "Succesfull buy :) " + bcolors.ENDC)
         return True
 
 class Game():
@@ -26,12 +37,12 @@ class Game():
     def rozcesti(self):
         print()
         print()
-        print("You can go to shop if you want :) If so enter number 1")
-        print("To print your stats enter 2")
-        print("To get your balance 3")
-        print("To get out enter 4")
+        print(f"You can go to {bcolors.OKCYAN}shop{bcolors.ENDC} if you want :) If so enter number - {bcolors.OKCYAN}1{bcolors.ENDC}")
+        print(f"To print your {bcolors.OKCYAN}stats{bcolors.ENDC} enter - {bcolors.OKCYAN}2{bcolors.ENDC}")
+        print(f"To get your {bcolors.OKCYAN}balance - 3{bcolors.ENDC}")
+        print(bcolors.FAIL + f"To get out enter {bcolors.OKCYAN}- 4"+ bcolors.ENDC)
         if self.infoBuy:
-            print("Special information: You now know there to find mining camp where you can mine some coin. To do soo you can press *")
+            print(bcolors.OKBLUE+ "Special information: You now know there to find mining camp where you can mine some coin. To do soo you can press *"+ bcolors.ENDC)
             
         whereToGO = input("")
 
@@ -55,7 +66,7 @@ class Game():
             return True
     
     def Shop(self):
-        print("--------Shop--------")
+        print(bcolors.OKBLUE+"--------Shop--------"+bcolors.ENDC)
         print("Welcome to Shop, what do you wish for?")
         
         print(f"Your balance is {player1.money} coins")
@@ -66,7 +77,7 @@ class Game():
                 self.infoBuy = True
                 break
             
-            print(f"{index + 1}) {offer[1]}: Price is {offer[3]}")
+            print(f"{index + 1}) {bcolors.OKBLUE}{offer[1]}{bcolors.ENDC}: {bcolors.OKGREEN}Price is {offer[3]}{bcolors.ENDC}")
             print(f"\t It adds {offer[2]} to your ", end="")
             
             if offer[0] == 0:
@@ -129,7 +140,7 @@ class Game():
     
     def MiningCamp(self):
         if self.infoBuy == True:
-            print("You are in mining Camp")
+            print(bcolors.OKBLUE+"You are in mining Camp" + bcolors.ENDC)
             while True:
                 print("Press 1 to dig to some place")
                 print("if you ant to escape enter 2")
@@ -163,12 +174,12 @@ class Player():
     def Vypiss(self):
         
         print(f"Name - {self.name},\nAttack: {self.attack},\nStamina: {self.stamina},")
-        print("HP:", end="")
+        print(bcolors.OKGREEN + "HP:" + bcolors.ENDC, end="")
         for x in hapecka:
             print(x, end=" ")
    
     def Balancik(self):
-        print(f"currently you have { self.money} coins")
+        print(f" {bcolors.OKGREEN}currently you have { self.money} coins {bcolors.ENDC}")
 
 class Enemy():
     def __init__(self, name, hp, attack, stamina):
@@ -182,50 +193,44 @@ class Enemy():
 
     def fight(self):
         
-        print("Boss aproched you if you want to run press 0 if you want to fight press 1")
+        print(bcolors.OKBLUE+"Boss aproched you if you want to run press 0 if you want to fight press 1"+bcolors.ENDC)
         c = input()
 
         if c == "0":
-            print("While you were running you tripped and broke your neck.... :( ")
-            print("Game Over")
+            print(bcolors.FAIL +"While you were running you tripped and broke your neck.... :( ")
+            print("Game Over" + bcolors.FAIL)
             sys.exit()
         if c == "1":
-            print("You chose to fight... Very well... ")
+            print(bcolors.OKCYAN + "You chose to fight... Very well... ")
             print("Do you even have a chance we will see")
-            print(f"Your enemy is {self.name}")
+            print(f"Your enemy is {self.name}" + bcolors.ENDC)
             self.Vypiss()
             
-            while player1.stamina > 0 and hapecka != []:
-                if player1.hp > 0:
-                    print("Attack - press 1")
-                    inputikAtt = input()
-                    if inputikAtt == "1":
-                        self.hp -= player1.attack
-                        player1.hp -= self.attack
-                        try:
-                            for x in range(self.attack):
-                                hapecka.pop()
-                        except:
-                            print("You lost :(")
-                            sys.exit()
-                            
-                        if self.hp < 0:
-                            self.hp = 0
-                        print(f"Enemy HP: {self.hp}")
-                        print("Your HP: ", end="")
-                        for x in hapecka:
-                            print(x, end="  ")
-                    player1.stamina -= 1
-                    print()
-                    print(f"Your stamina: {player1.stamina}")
-                    if self.hp <= 0:
-                        print("You won!!!")
-                        player1.money += 50
-                        player1.fightsWon += 1
-                        print("You gained 50 coins")
-                        return
-            if self.hp or hapecka == [] > 0:
-                print("You lost")
+            while player1.stamina > 0:
+                print("Attack - press 1")
+                inputikAtt = input()
+                if inputikAtt == "1":
+                    self.hp -= player1.attack
+                    player1.hp -= self.attack
+                    for x in range(self.attack):
+                        hapecka.pop()
+                    if self.hp < 0:
+                        self.hp = 0
+                    print(f" {bcolors.FAIL}Enemy HP: {self.hp}{bcolors.ENDC}")
+                    print(bcolors.OKGREEN+"Your HP: " + bcolors.ENDC, end="")
+                    for x in hapecka:
+                        print(x, end="  ")
+                player1.stamina -= 1
+                print()
+                print(f"Your stamina: {player1.stamina}")
+                if enemy1.hp <= 0:
+                    print(bcolors.OKGREEN + "You won!!!")
+                    player1.money += 50
+                    player1.fightsWon += 1
+                    print("You gained 50 coins"+ bcolors.OKGREEN)
+                    return
+            if self.hp >= 0:
+                print(bcolors.FAIL + "You lost" + bcolors.ENDC)
                 sys.exit()
 
 print("""\
@@ -238,7 +243,7 @@ print("""\
 
                     """)
 
-inpuJmeno = input("What is your name? ")
+inpuJmeno = input(bcolors.BOLD + bcolors.OKBLUE+ "What is your name? " + bcolors.ENDC)
 print(f"Hi {inpuJmeno}")
 
 """                                         GAME INIT                                         """
@@ -265,4 +270,4 @@ while run:
     game.rozcesti()
     if player1.fightsWon == 2:
         enemy3.fight()
-    print(f"You won the game {player1.name}. Congrats!!!!!!")
+    print(f"{bcolors.OKGREEN}You won the game {player1.name}. Congrats!!!!!!{bcolors.ENDC}")
