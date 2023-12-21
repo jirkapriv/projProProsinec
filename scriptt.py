@@ -223,7 +223,7 @@ class Enemy():
                 player1.stamina -= 1
                 print()
                 print(f"Your stamina: {player1.stamina}")
-                if enemy1.hp <= 0:
+                if self.hp <= 0:
                     print(bcolors.OKGREEN + "You won!!!")
                     player1.money += 50
                     player1.fightsWon += 1
