@@ -69,7 +69,7 @@ class Game():
         print(bcolors.OKBLUE+"--------Shop--------"+bcolors.ENDC)
         print("Welcome to Shop, what do you wish for?")
         
-        print(f"Your balance is {player1.money} coins")
+        print(f"{bcolors.OKGREEN}Your balance is {player1.money} coins{bcolors.ENDC}")
         print("Our offers are: ")
         
         for index, offer in enumerate(shopOffersList):
@@ -216,7 +216,7 @@ class Enemy():
                         hapecka.pop()
                     if self.hp < 0:
                         self.hp = 0
-                    print(f" {bcolors.FAIL}Enemy HP: {self.hp}{bcolors.ENDC}")
+                    print(f"{bcolors.FAIL}Enemy HP: {self.hp}{bcolors.ENDC}")
                     print(bcolors.OKGREEN+"Your HP: " + bcolors.ENDC, end="")
                     for x in hapecka:
                         print(x, end="  ")
